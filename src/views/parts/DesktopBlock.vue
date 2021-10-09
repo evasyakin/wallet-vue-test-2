@@ -1,5 +1,5 @@
 <template>
-    <div class="block" :style="blockStyle">
+    <div class="block" :style="blockStyle" @mousedown="moveStart">
         <h2 class="block-title">{{ block.title }}</h2>
         <p class="block-content">{{ block.content }}</p>
         <div class="resize" @mousedown="resizeStart" title="Нажмите и тяните чтобы изменить размер блока"></div>
@@ -14,13 +14,16 @@ export default {
     data () {
         return {
             resize: false,
+            move: false,
             desktopOffset: {x: 0, y: 0},
             cursorOffset: {x: 0, y: 0},
         }
     },
     computed: {
         blockStyle () {
-            return `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px;`
+            let style = `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px;`
+            if (this.move) style += ` cursor: move;`
+            return style
         },
     },
     methods: {
@@ -58,6 +61,23 @@ export default {
             }
         },
 
+        moveStart (e) {
+            this.move = true
+            this.setCursorOffset(e)
+        },
+        moveProcess (e) {
+            if (this.move) {
+                this.block.posX = e.pageX - this.desktopOffset.x - this.cursorOffset.x
+                this.block.posY = e.pageY - this.desktopOffset.y - this.cursorOffset.y
+            }
+        },
+        moveEnd () {
+            if (this.move) {
+                this.move = false
+                this.updateBlock()
+            }
+        },
+
         updateBlock () {
             this.$store.dispatch('desktop/updateBlock', this.block)
         },
@@ -65,6 +85,8 @@ export default {
     created () {
         window.addEventListener('mousemove', this.resizeProcess)
         window.addEventListener('mouseup', this.resizeEnd)
+        window.addEventListener('mousemove', this.moveProcess)
+        window.addEventListener('mouseup', this.moveEnd)
     },
     mounted () {
         let desktopNode = document.querySelector('#app .desktop')
