@@ -8,11 +8,11 @@ import Bitcoin from './views/Bitcoin'
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        { 
+        {
             path: '/desktop', component: Desktop,
             meta: { title: 'Рабочий стол' }
         },
-        { 
+        {
             path: '/bitcoin', component: Bitcoin,
             meta: { title: 'Список биткоин транзакций' }
         },

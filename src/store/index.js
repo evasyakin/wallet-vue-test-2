@@ -6,8 +6,8 @@ Vue.use(Vuex)
 import desktop from './desktop'
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: { desktop }
+    state: {},
+    mutations: {},
+    actions: {},
+    modules: { desktop }
 })

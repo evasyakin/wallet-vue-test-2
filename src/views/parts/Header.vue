@@ -1,17 +1,11 @@
 <template>
     <header class="header">
         <router-link to="/desktop">Рабочий стол</router-link>
-        <router-link to="/bitcoin">Бикоин транзакции</router-link>
+        <router-link to="/bitcoin">Биткоин транзакции</router-link>
     </header>
 </template>
 
-<script>
-export default {
-    name: 'Header',
-};
-</script>
-
-<style type="text/css">
+<style>
 .header {
     align-items: center; display: flex; justify-content: center;
     background: #2c3e50;

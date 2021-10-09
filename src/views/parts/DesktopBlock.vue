@@ -27,7 +27,7 @@ export default {
         },
     },
     methods: {
-        setCursorOffset(e) {
+        setCursorOffset (e) {
             let [x, y] = this.getNodeFullOffset(e.target)
             x = e.pageX - x
             y = e.pageY - y
