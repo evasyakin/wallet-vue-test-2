@@ -21,8 +21,8 @@ export default {
     },
     computed: {
         blockStyle () {
-            let style = `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px;`
-            if (this.move) style += ` cursor: move;`
+            let style = `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px; z-index: ${this.block.posZ};`
+            if (this.move) style += ' cursor: move;'
             return style
         },
     },
@@ -46,6 +46,7 @@ export default {
         resizeStart (e) {
             e.stopPropagation()
             this.resize = true
+            this.blockUp()
             this.setCursorOffset(e)
         },
         resizeProcess (e) {
@@ -63,6 +64,7 @@ export default {
 
         moveStart (e) {
             this.move = true
+            this.blockUp()
             this.setCursorOffset(e)
         },
         moveProcess (e) {
@@ -76,6 +78,10 @@ export default {
                 this.move = false
                 this.updateBlock()
             }
+        },
+
+        blockUp () {
+            this.$store.commit('desktop/blockUp', this.block)
         },
 
         updateBlock () {
@@ -101,7 +107,7 @@ export default {
     height: 100px; width: 300px;
     background: #fff; box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
     border-radius: 5px; padding: 10px;
-    position: absolute;
+    position: absolute; user-select: none;
 }
 .block-title {border-bottom: solid #ddd 1px; font-size: 16px; margin-bottom: 10px; padding-bottom: 10px;}
 .block-content {font-size: 15px;}

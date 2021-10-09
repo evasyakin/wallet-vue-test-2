@@ -34,6 +34,17 @@ const mutations = {
             items[index] = block
         })
     },
+    blockUp: (state, block) => {
+        let filtered = state.blocks.slice(0)
+        filtered = filtered.sort((a, b) => {
+            return a.posZ - b.posZ
+        })
+        filtered.forEach((item, posZ) => {
+            updateById(state.blocks, item.id, (items, index) => {
+                items[index].posZ = items[index].id == block.id ? filtered.length : posZ
+            })
+        })
+    },
 }
 
 export default {
