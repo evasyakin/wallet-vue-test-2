@@ -18,14 +18,21 @@ const actions = {
     },
 }
 
+// поиск сущности по id и вызов колбэк функции для её обновления
+function updateById (items, id, cb) {
+    let index = items.findIndex(item => item.id == id)
+    if (index === -1) console.error(`Item with id ${id} not found`)
+    else cb(items, index)
+}
+
 const mutations = {
     setBlocks: (state, blocks) => {
         state.blocks = blocks
     },
     updateBlock: (state, block) => {
-      let index = state.blocks.findIndex(item => item.id == block.id)
-      if (index === -1) console.error(`Block with id ${block.id} not found`)
-      else state.blocks[index] = block
+        updateById(state.blocks, block.id, (items, index) => {
+            items[index] = block
+        })
     },
 }
 
