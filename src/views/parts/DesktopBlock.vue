@@ -51,6 +51,7 @@ export default {
         },
         resizeProcess (e) {
             if (this.resize) {
+                this.$emit('intersect-check', this.block) // проверяем пересечения
                 this.block.sizeX = e.pageX - this.block.posX - this.desktopOffset.x + this.cursorOffset.x
                 this.block.sizeY = e.pageY - this.block.posY - this.desktopOffset.y + this.cursorOffset.y
             }
@@ -69,6 +70,7 @@ export default {
         },
         moveProcess (e) {
             if (this.move) {
+                this.$emit('intersect-check', this.block) // проверяем пересечения
                 this.block.posX = e.pageX - this.desktopOffset.x - this.cursorOffset.x
                 this.block.posY = e.pageY - this.desktopOffset.y - this.cursorOffset.y
             }
