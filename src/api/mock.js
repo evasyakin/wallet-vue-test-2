@@ -11,6 +11,7 @@ for (let i = 0; i < 5; i++) {
     content: 'Random content',
     posX: i * 300, posY: 0, posZ: 0,
     sizeX: 300, sizeY: 100,
+    intersecting: i < 1 ? false : true, // пересекаемый (может пересекать другие блоки)
   })
 }
 
