@@ -13,8 +13,6 @@ export default {
     },
     data () {
         return {
-            resize: false,
-            move: false,
             desktopOffset: {x: 0, y: 0},
             cursorOffset: {x: 0, y: 0},
         }
@@ -22,7 +20,7 @@ export default {
     computed: {
         blockStyle () {
             let style = `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px; z-index: ${this.block.posZ};`
-            if (this.move) style += ' cursor: move;'
+            if ('move' == this.block.action) style += ' cursor: move;'
             return style
         },
     },
@@ -45,38 +43,38 @@ export default {
 
         resizeStart (e) {
             e.stopPropagation()
-            this.resize = true
+            this.block.action = 'resize'
             this.blockUp()
             this.setCursorOffset(e)
         },
         resizeProcess (e) {
-            if (this.resize) {
-                this.$emit('intersect-check', this.block) // проверяем пересечения
+            if ('resize' == this.block.action) {
                 this.block.sizeX = e.pageX - this.block.posX - this.desktopOffset.x + this.cursorOffset.x
                 this.block.sizeY = e.pageY - this.block.posY - this.desktopOffset.y + this.cursorOffset.y
+                this.$emit('intersect-check', this.block) // проверяем пересечения
             }
         },
         resizeEnd () {
-            if (this.resize) {
-                this.resize = false
+            if ('resize' == this.block.action) {
+                this.block.action = null
             }
         },
 
         moveStart (e) {
-            this.move = true
+            this.block.action = 'move'
             this.blockUp()
             this.setCursorOffset(e)
         },
         moveProcess (e) {
-            if (this.move) {
-                this.$emit('intersect-check', this.block) // проверяем пересечения
+            if ('move' == this.block.action) {
                 this.block.posX = e.pageX - this.desktopOffset.x - this.cursorOffset.x
                 this.block.posY = e.pageY - this.desktopOffset.y - this.cursorOffset.y
+                this.$emit('intersect-check', this.block) // проверяем пересечения
             }
         },
         moveEnd () {
-            if (this.move) {
-                this.move = false
+            if ('move' == this.block.action) {
+                this.block.action = null
             }
         },
 

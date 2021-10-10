@@ -19,6 +19,7 @@ for (let i = 0; i < 5; i++) {
         posZ: 0,
         sizeX: defaults.sizeX, sizeY: defaults.sizeY,
         intersecting: i < 1 ? false : true, // пересекаемый (может пересекать другие блоки)
+        action: null,
     })
 }
 
