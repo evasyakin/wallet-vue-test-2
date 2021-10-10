@@ -29,11 +29,6 @@ const mutations = {
     setBlocks: (state, blocks) => {
         state.blocks = blocks
     },
-    updateBlock: (state, block) => {
-        updateById(state.blocks, block.id, (items, index) => {
-            items[index] = block
-        })
-    },
     blockUp: (state, block) => {
         let filtered = state.blocks.slice(0)
         filtered = filtered.sort((a, b) => {

@@ -59,7 +59,6 @@ export default {
         resizeEnd () {
             if (this.resize) {
                 this.resize = false
-                this.updateBlock()
             }
         },
 
@@ -78,16 +77,11 @@ export default {
         moveEnd () {
             if (this.move) {
                 this.move = false
-                this.updateBlock()
             }
         },
 
         blockUp () {
             this.$store.commit('desktop/blockUp', this.block)
-        },
-
-        updateBlock () {
-            this.$store.dispatch('desktop/updateBlock', this.block)
         },
     },
     created () {
