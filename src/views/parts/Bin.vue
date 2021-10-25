@@ -1,34 +1,34 @@
 <template>
-    <div class="bin">
-        <div v-if="opened" class="bin-blocks">
-            <div v-for="(block, key) in bin" :key="key" class="block">
+    <div class="bin" :style="binStyle">
+        <div v-if="bin.opened" class="bin-blocks">
+            <div v-for="(block, key) in bin.models" :key="key" class="block">
                 <div class="block-title">{{ block.title }}</div>
-                <div class="btn btn--restore" @click="$emit('restore-block', block)">Восстановить</div>
-                <div class="btn btn--remove" @click="$emit('remove-bin-block', block)">Удалить</div>
+                <div class="btn btn--restore" @click="block.restore">Восстановить</div>
+                <div class="btn btn--remove" @click="block.remove">Удалить</div>
             </div>
-            <div v-if="bin.length" class="btn btn--restore-all" @click="$emit('restore-all-blocks')">
+            <div v-if="bin.size()" class="btn btn--restore-all" @click="bin.restoreAll">
                 Восстановить все
             </div>
             <div v-else class="bin-empty">
-                Пусто. Перенесите блок в корзину, чтобы удалить его.
+                Пусто. После перенеоса блока в корзину его можно восстановить или удалить.
             </div>
         </div>
-        <div class="btn btn--open" @click="opened = !opened">
-            {{ opened ? 'Свернуть корзину' : 'Корзина' }} (<b>{{ bin.length }}</b>)
+        <div class="btn btn--open" @click="bin.openingToggle">
+            {{ bin.opened ? 'Свернуть корзину' : 'Корзина' }} (<b>{{ bin.size() }}</b>)
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
-    data () {
+    data() {
         return {
             opened: false,
         }
     },
     computed: {
-        ...mapGetters('desktop', [ 'bin' ]),
+        bin() { return this.$store.desktop.bin },
+        binStyle() { return `z-index: ${this.$store.desktop.size()}` }
     },
 };
 </script>
@@ -42,9 +42,7 @@ export default {
     background: #fff; border-radius: 5px; box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
     margin-bottom: 5px; max-width: 400px;
 }
-.bin-empty {
-    max-width: 240px; padding: 10px;
-}
+.bin-empty {max-width: 240px; padding: 10px;}
 .bin .block {align-items: center; border-bottom: solid #eee 1px; display: flex; padding: 8px 10px;}
 .bin .block-title {padding: 5px 10px;}
 .bin .btn {
