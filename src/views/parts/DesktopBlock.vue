@@ -1,5 +1,5 @@
 <template>
-    <div class="block" :style="blockStyle" @mousedown="moveStart">
+    <div :class="blockClass" :style="blockStyle" @mousedown="moveStart">
         <h2 class="block-title">{{ block.title }}</h2>
         <p class="block-content">{{ block.content }}</p>
         <div class="resize" @mousedown="resizeStart" title="Нажмите и тяните чтобы изменить размер блока"></div>
@@ -18,9 +18,17 @@ export default {
         }
     },
     computed: {
+        blockClass () {
+            let className = 'block'
+            if (!this.block.intersecting) className += ' nonIntersecting'
+            if (this.block.blockUp) className += ' blockUp'
+            if ('move' == this.block.action) className += ' move'
+            return className
+        },
         blockStyle () {
             let style = `left: ${this.block.posX}px; top: ${this.block.posY}px; width: ${this.block.sizeX}px; height: ${this.block.sizeY}px; z-index: ${this.block.posZ};`
-            if ('move' == this.block.action) style += ' cursor: move;'
+            // if ('move' == this.block.action) style += ' cursor: move;'
+            // if (!this.block.intersecting) style += 'background: #eeffff;'
             return style
         },
     },
@@ -44,18 +52,20 @@ export default {
         resizeStart (e) {
             e.stopPropagation()
             this.block.action = 'resize'
+            // this.$emit('intersect-check', this.block) // проверяем пересечения
             this.blockUp()
             this.setCursorOffset(e)
         },
         resizeProcess (e) {
             if ('resize' == this.block.action) {
+                this.$emit('intersect-check', this.block) // проверяем пересечения
                 this.block.sizeX = e.pageX - this.block.posX - this.desktopOffset.x + this.cursorOffset.x
                 this.block.sizeY = e.pageY - this.block.posY - this.desktopOffset.y + this.cursorOffset.y
-                this.$emit('intersect-check', this.block) // проверяем пересечения
             }
         },
         resizeEnd () {
             if ('resize' == this.block.action) {
+                this.$emit('intersect-check', this.block) // проверяем пересечения
                 this.block.action = null
             }
         },
@@ -74,6 +84,12 @@ export default {
         },
         moveEnd () {
             if ('move' == this.block.action) {
+                this.$emit('intersect-check', this.block) // проверяем пересечения
+                console.log('-- end move')
+                // this.$emit('intersect-check', this.block) // проверяем пересечения
+                // this.$emit('intersect-check', this.block) // проверяем пересечения
+                // this.$emit('intersect-check', this.block) // проверяем пересечения
+                console.log('-- final end move')
                 this.block.action = null
             }
         },
@@ -97,14 +113,6 @@ export default {
 </script>
 
 <style>
-.block {
-    height: 100px; width: 300px;
-    background: #fff; box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
-    border-radius: 5px; padding: 10px;
-    position: absolute; user-select: none;
-}
-.block-title {border-bottom: solid #ddd 1px; font-size: 16px; margin-bottom: 10px; padding-bottom: 10px;}
-.block-content {font-size: 15px;}
 .resize {
     height: 20px; width: 20px; padding-top: 10px; overflow: hidden;
     clip-path: polygon(100% 0%, 100% 100%, 0% 100%); cursor: nw-resize;
@@ -113,9 +121,24 @@ export default {
 .resize::before, .resize::after {
     display: block; content: '';
     border-bottom: solid 1px #333; border-top: solid 1px #333;
-    height: 3px; width: 30px;
-    transform: rotate(-45deg);
+    height: 3px; width: 30px; transform: rotate(-45deg);
 }
-.resize::before {}
 .resize::after {margin-top: 3px;}
+
+.desk .block {
+    height: 100px; width: 300px;
+    background: #fff; box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+    border: solid #ddd 2px; border-radius: 5px;
+    position: absolute; user-select: none;
+}
+.desk .block-title {
+    background: #eee; border-bottom: solid #ddd 2px; border-radius: 5px 5px 0 0; 
+    font-size: 16px; padding: 7px 10px;
+}
+.desk .block-content {border-radius: 0 0 5px 5px; font-size: 15px; padding: 10px;}
+
+.desk .block.nonIntersecting {background: #fee;}
+.desk .block.move {cursor: move;}
+.desk .block.blockUp {border-color: #69f;}
+.desk .block.blockUp .block-title {background: #acf; border-color: #69f;}
 </style>
