@@ -6,10 +6,10 @@
         <Bin />
         <div class="history">
             <button @click="history.undo()" class="btn" :disabled="!history.hasUndo()">
-                &lt; Undo ({{ history.undoCount() }})
+                <!-- &lt; -->↩ Undo ({{ history.undoCount() }})
             </button>
             <button @click="history.redo()" class="btn" :disabled="!history.hasRedo()">
-                Redo ({{ history.redoCount() }}) &gt;
+                Redo ({{ history.redoCount() }}) ↪<!-- &gt; -->
             </button>
             <button @click="desktop.reset()" class="btn">Reset</button>
         </div>
